@@ -21,6 +21,7 @@ function Header(){
             <NavLink href="who">Who are we?</NavLink>
             <NavLink href="menu">Menu</NavLink>
             <NavLink href="faq">FAQ</NavLink>
+            <NavLink href="recommendation">Recommendation</NavLink>
           </Nav>
       </Container>
     </Navbar>

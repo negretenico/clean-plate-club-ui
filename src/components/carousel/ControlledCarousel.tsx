@@ -3,7 +3,6 @@ import {
   MDBCarousel,
   MDBCarouselItem,
 } from 'mdb-react-ui-kit';
-import yTho from './y.jpg'
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 

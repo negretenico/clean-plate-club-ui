@@ -1,3 +1,4 @@
+import { Button } from "react-bootstrap";
 import ControlledCarousel from "../../components/carousel/ControlledCarousel";
 import MarkdownComponenet from "../../components/shared/MarkdownComponent";
 import useMd from "../../hooks/useMd";
@@ -7,6 +8,10 @@ function Home(){
     return(
         <>
             <h1>You select, we perfect, you heat, bon appetit</h1>
+            <br/>
+            <div>
+              <a href={"/survey"}>Take the survey</a>
+            </div>
             <br/>
             <MarkdownComponenet md={content.md}/>
             <br/>
