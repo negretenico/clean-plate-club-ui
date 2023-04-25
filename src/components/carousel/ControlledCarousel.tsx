@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import {
   MDBCarousel,
-  MDBCarouselItem,
+  MDBCarouselItem
 } from 'mdb-react-ui-kit';
-function ControlledCarousel() {
+function ControlledCarousel (): JSX.Element {
   const [index, setIndex] = useState(0);
 
-  const handleSelect = (selectedIndex:number) => {
+  const handleSelect = (selectedIndex: number): void => {
     setIndex(selectedIndex);
   };
 
@@ -15,7 +16,7 @@ function ControlledCarousel() {
       <MDBCarouselItem
         className='w-100 d-block'
         itemId={1}
-        data-testid={"img1"}
+        data-testid={'img1'}
         src='https://mdbootstrap.com/img/Photos/Slides/img%20(15).jpg'
         alt='...'
       >
