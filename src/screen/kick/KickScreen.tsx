@@ -36,7 +36,6 @@ function KickScreen (): JSX.Element {
 
     const createMarkdown = (): string => {
       const macros = goals[data.gender][data.goals];
-      console.log(macros);
       return `These macros are intake amounts per day!\n\nFor a ${data.gender} with the goal of ${data.goals}\n\n- Calories: ${macros.calories}\n- Protein: ${macros.protein}\n- Carbs:  ${macros.carbs}\n- Fat:  ${macros.fat}\n\n`;
     };
     return (

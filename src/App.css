@@ -38,5 +38,13 @@
 }
 .nav-link.active {
   color: #fff !important;
-  background: black !important;
+}
+.checkout-header{
+  font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+}
+.primary-button{
+  background-color: #Df6C4f !important;
+  border: none !important;
 }

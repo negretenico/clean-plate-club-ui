@@ -1,25 +1,91 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import type User from '../types/User';
+import type Registration from '../types/Registration';
+import { useCookies } from 'react-cookie';
+
+interface LoginContextProps {
+  isLoggedIn: boolean
+  user: User
+  handleLogin: (data: Registration) => void
+  handleLogout: () => void
+}
 
 // Create a login context
-export const LoginContext = createContext();
+export const LoginContext = createContext<LoginContextProps>({
+  isLoggedIn: false,
+  handleLogin: function (data: Registration): number {
+    throw new Error('Function not implemented.');
+  },
+  handleLogout: function (): void {
+    throw new Error('Function not implemented.');
+  },
+  user: {
+    current_goals: '',
+    email: '',
+    id: '',
+    name: '',
+    past_goals: '',
+    trainer: ''
+  }
+});
 
-// Create a login context provider
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, react/prop-types
-export const LoginContextProvider = ({ children }) => {
+const initialUser = {
+  current_goals: '',
+  email: '',
+  id: '',
+  name: '',
+  past_goals: '',
+  trainer: ''
+};
+export const LoginContextProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   // Define the initial authentication state
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
-  const [user, setUser] = useState({});
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  // Function to handle login
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleLogin = (data) => {
-    // Call API to authenticate user
-    // If login is successful, update isLoggedIn and userName state
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState<User>(initialUser);
+  const [cookies, setCookie, removeCookie] = useCookies();
+
+  useEffect(() => {
+    const cookieToken: string = cookies.access_token;
+    axios.post('http://localhost:5000/api/users/foo', {}, {
+      headers: {
+        Authorization: `Bearer ${cookieToken}`, // Set the Authorization header with the Bearer token
+        'Access-Control-Allow-Origin': 'true'
+      }
+    })
+      .then((response) => {
+        setIsLoggedIn(true);
+        setUser((prevUser) => ({ ...prevUser, ...response.data }));
+        setCookie('access_token', cookieToken); // Set the access token as a cookie
+      })
+      .catch((error) => {
+        // handle error
+        if ((Boolean(error.response)) && error.response.status === 500) {
+          console.log('Internal Server error');
+        }
+      });
+  }, []);
+  const REFRESH_INTERVAL = 10 * 60 * 1000; // 10 minutes
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    if (isLoggedIn) {
+      const cookieToken: string = cookies.access_token;
+
+      intervalId = setInterval(() => {
+        axios.post('http://localhost:5000/api/users/refresh-token', {
+          refreshToken: cookieToken
+        }).then((response) => {
+          setCookie('access_token', response.data.access_token);
+        }).catch((error) => {
+          console.error(error);
+        });
+      }, REFRESH_INTERVAL);
+    }
+
+    return () => { clearInterval(intervalId); };
+  }, [isLoggedIn]);
+  const handleLogin = (data: Registration): void => {
     axios.post('http://localhost:5000/api/users/login', { email: data.email, password: data.password })
       .then((response) => {
         const token: string = response.data.access_token;
@@ -32,32 +98,28 @@ export const LoginContextProvider = ({ children }) => {
           .then((response) => {
             setIsLoggedIn(true);
             setUser((prevUser) => ({ ...prevUser, ...response.data }));
-            localStorage.setItem('isLoggedIn', 'true');
+            setCookie('access_token', token); // Set the access token as a cookie
           })
           .catch((error) => {
             // handle error
             if ((Boolean(error.response)) && error.response.status === 500) {
               console.log('Internal Server error');
-              window.location('/');
             }
           });
       }).catch((error) => {
-      // handle error
+        // handle error
         if ((Boolean(error.response)) && error.response.status === 500) {
           console.log('Internal Server error');
-          window.location('/');
         }
       });
   };
 
-  // Function to handle logout
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     // Call API to log out user
     // If logout is successful, update isLoggedIn and userName state
     setIsLoggedIn(false);
-    setUser('');
-    localStorage.removeItem('isLoggedIn');
+    setUser(initialUser);
+    removeCookie('access_token'); // Delete the access token cookie
   };
 
   // Value to be provided by the login context
@@ -76,13 +138,7 @@ export const LoginContextProvider = ({ children }) => {
   );
 };
 
-// Custom hook to consume the login context
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const useLoginContext = () => {
+export const useLoginContext = (): LoginContextProps => {
   const context = React.useContext(LoginContext);
-  // eslint-disable-next-line no-extra-boolean-cast
-  if (!(Boolean(context))) {
-    throw new Error('useLoginContext must be used within a LoginContextProvider');
-  }
   return context;
 };

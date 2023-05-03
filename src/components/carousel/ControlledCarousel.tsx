@@ -1,49 +1,39 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
-import {
-  MDBCarousel,
-  MDBCarouselItem
-} from 'mdb-react-ui-kit';
-function ControlledCarousel (): JSX.Element {
-  const [index, setIndex] = useState(0);
+import './ControlledCarousel.css';
+import React, { useState, useRef } from 'react';
+import { TESTIMONIALS } from './testimonials';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-  const handleSelect = (selectedIndex: number): void => {
-    setIndex(selectedIndex);
+function ControlledCarousel (): JSX.Element {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handlePrev = (): void => {
+    setCurrentIndex(currentIndex === 0 ? TESTIMONIALS.length - 1 : currentIndex - 1);
+  };
+
+  const handleNext = (): void => {
+    setCurrentIndex(currentIndex === TESTIMONIALS.length - 1 ? 0 : currentIndex + 1);
   };
 
   return (
-    <MDBCarousel showIndicators showControls fade>
-      <MDBCarouselItem
-        className='w-100 d-block'
-        itemId={1}
-        data-testid={'img1'}
-        src='https://mdbootstrap.com/img/Photos/Slides/img%20(15).jpg'
-        alt='...'
-      >
-        <h5>First slide label</h5>
-        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-      </MDBCarouselItem>
-
-      <MDBCarouselItem
-        className='w-100 d-block'
-        itemId={2}
-        src='https://mdbootstrap.com/img/Photos/Slides/img%20(22).jpg'
-        alt='...'
-      >
-        <h5>Second slide label</h5>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      </MDBCarouselItem>
-
-      <MDBCarouselItem
-        className='w-100 d-block'
-        itemId={3}
-        src='https://mdbootstrap.com/img/Photos/Slides/img%20(23).jpg'
-        alt='...'
-      >
-        <h5>Third slide label</h5>
-        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-      </MDBCarouselItem>
-    </MDBCarousel>
+    <div className="image-slider">
+      <div className="slider-container">
+        <div className='slider-prev' onClick={handlePrev}>
+          <img className="testimonial-image" src={TESTIMONIALS[currentIndex === 0 ? TESTIMONIALS.length - 1 : currentIndex - 1].image} alt="" />
+        </div>
+        <div className='slider-current'>
+          <img className="testimonial-image " src={TESTIMONIALS[currentIndex].image} alt="" />
+          <div>
+            <h4>{TESTIMONIALS[currentIndex].achieved}</h4>
+            <p>{TESTIMONIALS[currentIndex].quote}</p>
+          </div>
+        </div>
+        <div className='slider-next' onClick={handleNext}>
+          <img className="testimonial-image" src={TESTIMONIALS[currentIndex === TESTIMONIALS.length - 1 ? 0 : currentIndex + 1].image} alt="" />
+        </div>
+      </div>
+    </div>
   );
 }
+
 export default ControlledCarousel;

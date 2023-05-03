@@ -4,3 +4,4 @@ interface Registration {
   confrimPwd: string
   name: string
 }
+export default Registration;

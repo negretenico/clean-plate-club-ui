@@ -7,7 +7,8 @@ import {
   MDBCardImage,
   MDBIcon,
   MDBRow,
-  MDBCol
+  MDBCol,
+  MDBBtn
 }
   from 'mdb-react-ui-kit';
 import './Registration.css';
@@ -16,6 +17,8 @@ import { Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { PINK } from '../../colors';
+import { useLoginContext } from '../../hooks/loginContext';
 
 const usePasswordValidation = (password: string): boolean => {
   const [validPassword, setValidPassword] = useState<boolean>(false);
@@ -30,14 +33,16 @@ const usePasswordValidation = (password: string): boolean => {
 };
 function RegistrationScreen (): JSX.Element {
   const navigate = useNavigate();
+  const { handleLogin } = useLoginContext();
+
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const onsubmit: SubmitHandler<Registration | FieldValues> = (data: Registration) => {
     axios.post('http://localhost:5000/api/users/signup', { name: data.name, email: data.email, password: data.password })
       .then((response) => {
+        handleLogin(data);
         navigate('/', { state: data });
-        console.log(response.data);
       }).catch((error) => {
       // handle error
         if ((Boolean(error.response)) && error.response.status === 500) {
@@ -58,17 +63,17 @@ function RegistrationScreen (): JSX.Element {
           <MDBRow >
             <MDBCol md='10' lg='6' className='order-2 order-lg-1 d-flex flex-column align-items-center'>
 
-              <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Registration</p>
+              <h4 className="mt-1" style={{ color: PINK }}>Clean Plate Club</h4>
               {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
               <form onSubmit={handleSubmit(onsubmit)}>
                 <div className="d-flex flex-row align-items-center mb-4 ">
                   <MDBIcon fas icon="user me-3" size='lg'/>
-                  <MDBInput {...register('name')} placeholder='Your Name' id='form1' type='text' className='w-100'/>
+                  <MDBInput label='Name' {...register('name')} placeholder='Your Name' id='form1' type='text' className='w-100'/>
                 </div>
 
                 <div className="d-flex flex-row align-items-center mb-4">
                   <MDBIcon fas icon="envelope me-3" size='lg'/>
-                  <MDBInput id='form2' type='email'{...register('email', {
+                  <MDBInput label='Email' id='form2' type='email'{...register('email', {
                     required: true,
                     pattern: /^\S+@\S+$/i
                   })} placeholder='Email'/>
@@ -79,6 +84,7 @@ function RegistrationScreen (): JSX.Element {
                 <div className="d-flex flex-row align-items-center mb-4">
                   <MDBIcon fas icon="lock me-3" size='lg'/>
                   <MDBInput
+                    label='Password'
                     value={password}
                     placeholder='Password'
                     id='form3'
@@ -96,7 +102,7 @@ function RegistrationScreen (): JSX.Element {
 
                 <div className="d-flex flex-row align-items-center mb-4">
                   <MDBIcon fas icon="key me-3" size='lg'/>
-                  <MDBInput placeholder='Repeat your password' id='form4' type='password' {...register('confirmpwd', {
+                  <MDBInput label='Repeat Password' placeholder='Repeat your password' id='form4' type='password' {...register('confirmpwd', {
                     required: true,
                     validate: (val: string) => {
                       if (watch('password') !== val) {
@@ -108,7 +114,7 @@ function RegistrationScreen (): JSX.Element {
 
                 </div>
 
-                <Button onClick={() => { setIsSubmitted(true); }} type="submit" size='sm'>Register</Button>
+                <MDBBtn type='submit' className="mb-4 w-100 gradient-custom-2">Sign in</MDBBtn>
               </form>
             </MDBCol>
 

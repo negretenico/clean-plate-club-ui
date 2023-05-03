@@ -6,7 +6,6 @@ import {
   MDBCardBody,
   MDBCardTitle,
   MDBCardText,
-  MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
@@ -15,6 +14,7 @@ import {
 import './DuplicateEmailScreen.css';
 import MarkdownComponenet from '../../components/shared/MarkdownComponent';
 import useMd from '../../hooks/useMd';
+import type Registration from '../../types/Registration';
 function DuplicateEmailScreen (): JSX.Element {
   const location: { state: Registration } = useLocation();
   const { email } = location.state;

@@ -8,4 +8,8 @@ interface Meal {
   calories: number
 }
 type macro = 'carb' | 'fat' | 'protein';
+export function mealEquals (a: Meal, b: Meal): boolean {
+  return a.meal_id === b.meal_id;
+}
+
 export default Meal;

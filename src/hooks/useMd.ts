@@ -5,7 +5,6 @@ function useMd (filePath: string): { content: { md: string } } {
   useEffect(() => {
     fetch(filePath)
       .then(async (res) => {
-        console.log(res);
         return await res.text();
       })
       .then((md) => {

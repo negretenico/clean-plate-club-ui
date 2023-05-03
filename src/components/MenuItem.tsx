@@ -2,14 +2,20 @@ import React, { useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useLoginContext } from '../hooks/loginContext';
-import { MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardText, MDBCardTitle, MDBIcon, MDBRow } from 'mdb-react-ui-kit';
+import { MDBBadge, MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardSubTitle, MDBCardText, MDBCardTitle, MDBCol, MDBIcon, MDBListGroup, MDBListGroupItem, MDBRow } from 'mdb-react-ui-kit';
 import type Meal from '../types/MenuItem';
+import { type backgroundColor } from 'mdb-react-ui-kit/dist/types/types/colors';
+import './FlippingCard.css';
+import QuantityAndAdd from './menu/QuantityAndAdd';
+import MenuTitle from './menu/MenuTitle';
+import { useShoppingCart } from '../hooks/shoppingContext';
 function MenuItem ({ item }: { item: Meal }): JSX.Element {
+  const { increaseCartQuantity, removeFromCart, cartItems } = useShoppingCart();
   const [count, setCount] = useState<number>(0);
   const navigate = useNavigate();
   const onClickMap: Record<string, () => void> = {
     true: () => {
-      console.log('adding item to the cart');
+      navigate('/checkout', { state: { cartItems } });
     },
     false: () => {
       navigate('/login');
@@ -20,48 +26,57 @@ function MenuItem ({ item }: { item: Meal }): JSX.Element {
   const handleFlip = (): void => {
     setIsFlipped(!isFlipped);
   };
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   const { isLoggedIn } = useLoginContext();
   const handleClick = (): void => {
-    onClickMap[isLoggedIn]();
+    onClickMap[String(isLoggedIn)]();
   };
   const handleIncreaseClick = (): void => {
     setCount(count + 1);
+    increaseCartQuantity(item);
   };
   const handleDecreaseClick = (): void => {
+    if (count === 0) {
+      return;
+    }
     setCount(count - 1);
+    removeFromCart(item.meal_id);
+  };
+
+  const macroColor: Record<string, backgroundColor> = {
+    carbs: 'warning',
+    fat: 'danger',
+    protein: 'info'
   };
   return (<>
-    <MDBCard className={`flipping-card ${isFlipped ? 'flipped' : ''}`}>
-      <div className="card-front" onClick={handleFlip}>
-        <MDBCardImage src='https://mdbootstrap.com/img/new/standard/nature/184.webp' position='top' alt='...'/>
+    <MDBCard className="flip-card-outer">
+      <div className={isFlipped ? 'card-back' : 'card-front'} >
+        <MDBCardImage src={`food/${item.meal_id}.jpg`} style={{ height: '420px', width: '100%' }} position='top' alt='...'/>
+        <MenuTitle item={item} handleFlip={handleFlip}/>
         <MDBCardBody>
-          <MDBCardTitle>{item.name}</MDBCardTitle>
-          <MDBIcon fas icon="info-circle" />
-          <MDBRow>
-            Quantity
-            <MDBBtn onClick={handleDecreaseClick} >-</MDBBtn>
-            {count}
-            <MDBBtn onClick={handleIncreaseClick}>+</MDBBtn>
-          </MDBRow>
-          <MDBBtn onClick={handleClick}>Add to Cart</MDBBtn>
+          <QuantityAndAdd count={count} handleIncreaseClick={handleIncreaseClick} handleDecreaseClick={handleDecreaseClick} handleClick={handleClick} />
         </MDBCardBody>
       </div>
-      <div className="card-back" onClick={handleFlip}>
+      <div className={isFlipped ? 'card-front' : 'card-back'} onClick={handleFlip}>
+        <MenuTitle item={item} handleFlip={handleFlip}/>
         <MDBCardBody>
-          <MDBCardText>{item.ingredients}</MDBCardText>
+          <MDBCardSubTitle>Ingredients</MDBCardSubTitle>
+          <MDBListGroup>
+            {
+              item.ingredients.map((ingredient, index) => {
+                return <MDBListGroupItem key={index}>{ingredient}</MDBListGroupItem>;
+              })
+            }
+          </MDBListGroup>
+          <MDBBadge color='success'>Calories {item.calories}</MDBBadge>
+          {
+            Object.entries(item.macros).map(([key, value]) => {
+              return (<>
+                <MDBBadge color={macroColor[key]} className='ms-2' pill>{key} {value}g</MDBBadge>
+              </>);
+            })
+          }
+          <QuantityAndAdd count={count} handleIncreaseClick={handleIncreaseClick} handleDecreaseClick={handleDecreaseClick} handleClick={handleClick} />
         </MDBCardBody>
-        Ingredients
-        {item.ingredients}
-        <MDBBadge color='success' light>Calories {item.calories}</MDBBadge>
-        {
-          Object.entries(item.macros).map(([key, value]) => {
-            return (<>
-              <MDBBadge color='success' light>{key} {value}g</MDBBadge>
-            </>);
-          })
-        }
       </div>
     </MDBCard>
   </>);

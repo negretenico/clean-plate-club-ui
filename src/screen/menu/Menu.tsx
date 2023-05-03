@@ -7,6 +7,7 @@ import MenuItem from '../../components/MenuItem';
 import { Row, Spinner } from 'react-bootstrap';
 import { MDBCol, MDBContainer, MDBRow } from 'mdb-react-ui-kit';
 import type Meal from '../../types/MenuItem';
+import './Menu.css';
 function Menu (): JSX.Element {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
