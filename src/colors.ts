@@ -1,6 +1,3 @@
-export const BLUE = '#242582';
-export const ASHPURPLE = '#553D67';
-export const PINK = '#FF9398';
-export const PINKINSHPURPLE = '#99738E';
-export const BLUISHPURPLE = '#2F2FA2';
-export const ORANGE = '#DF6C4F';
+export const BLUE = '#5F8A42';
+export const PINK = '#F28410';
+export const ORANGE = '#F6FAA1';

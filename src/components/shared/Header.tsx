@@ -1,6 +1,5 @@
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import logo from '../../logo.png';
 import React from 'react';
 import { useLoginContext } from '../../hooks/loginContext';
 import { Button, Stack } from 'react-bootstrap';
@@ -16,7 +15,7 @@ function Header (): JSX.Element {
       <LinkContainer to="/">
         <Navbar.Brand>             <img
           alt="logo"
-          src={logo}
+          src={'logo.png'}
           width="30"
           height="30"
           className="d-inline-block align-top"
@@ -38,9 +37,6 @@ function Header (): JSX.Element {
           <LinkContainer to="faq">
             <Nav.Link>FAQ</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/recommendation">
-            <Nav.Link>Recommendation</Nav.Link>
-          </LinkContainer>
         </Nav>
 
       </Navbar.Collapse>
@@ -57,7 +53,7 @@ function Header (): JSX.Element {
             </LinkContainer>
         }
       </Nav>
-      {cartQuantity > 0 && (
+      {cartQuantity > 0 && isLoggedIn && (
         <Button
           onClick={openCart}
           style={{ width: '3rem', height: '3rem', position: 'relative' }}

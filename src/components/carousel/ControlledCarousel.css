@@ -1,38 +1,13 @@
-.slider-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .slider-prev,
-  .slider-next {
-    filter: blur(3px);
-    cursor: pointer;
-  }
-  
-  .slider-current {
-    opacity: 1;
-    transform: scale(1);
-  }
-  
-  .testimonial-image {
-    max-width: 420px;
-    height: 420px;
-    border-radius: 8px;
+.swiper {
+  padding-top: 50px;
+  padding-bottom: 80px;
+}
 
-  }
-
-  .slider-transition{
-    animation-name: fade;
-    animation-duration: 1.5s;
-  }@keyframes fade {
-    from {
-      opacity: 0;
-      transform: translateX(-20%);
-    }
-  
-    to {
-      opacity: 1;
-      transform: translateX(0%);
-    }
-  }
+.swiper .swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 480px;
+  height: 640px;
+  -webkit-box-reflect: below 1px
+    linear-gradient(transparent, transparent, #0006);
+}

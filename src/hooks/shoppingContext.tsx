@@ -4,6 +4,7 @@ import useLocalStorage from './useLocalStorage';
 import type Meal from '../types/MenuItem';
 import ShoppingCart from '../components/shared/ShoppingCart';
 import { useNavigate } from 'react-router-dom';
+import { ifError } from 'assert';
 interface ShoppingCartContextType {
   getItemQuantity: (id: string) => number
   increaseCartQuantity: (meal: Meal) => void
@@ -11,10 +12,14 @@ interface ShoppingCartContextType {
   openCart: () => void
   closeCart: () => void
   cartItems: Meal[]
+  emptyCart: () => void
   cartQuantity: number
 }
 
 const ShoppingCartContext = createContext<ShoppingCartContextType>({
+  emptyCart: function (): void {
+    throw new Error('Function not implemented.');
+  },
   getItemQuantity: function (id: string): number {
     throw new Error('Function not implemented.');
   },
@@ -48,6 +53,10 @@ export function ShoppingCartProvider ({ children }: { children: React.ReactNode 
 
   const openCart = (): void => { setIsOpen(true); };
   const closeCart = (): void => { setIsOpen(false); };
+  const emptyCart = (): void => {
+    setCartItems([]);
+  };
+
   const getItemQuantity = (id: string): number => {
     return cartItems.filter(item => item.meal_id === id).length;
   };
@@ -78,6 +87,7 @@ export function ShoppingCartProvider ({ children }: { children: React.ReactNode 
         removeFromCart,
         openCart,
         closeCart,
+        emptyCart,
         cartItems,
         cartQuantity
       }}

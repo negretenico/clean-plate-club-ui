@@ -39,9 +39,8 @@ function ShoppingCart ({ isOpen, navigate }: ShoppingCartProps): JSX.Element {
       <MDBContainer>
         <MDBRow>
           <MDBCol style={{ textAlign: 'center' }} >
-            <h4>Select a delivery method</h4>
-            <MDBBtn style={{ marginRight: '5px' }} onClick = {() => { navigate('/delivery'); closeCart(); }} className='primary-button' >Delivery</MDBBtn>
-            <MDBBtn style={{ marginLeft: '5px' }} onClick= {() => { navigate('/checkout', { state: { address: 'Foo Address, NOrwalk OHIO 44857', cartItems } }); closeCart(); }} className='primary-button' >Pick up</MDBBtn>
+            <h4>Proceed to Checkout</h4>
+            <MDBBtn style={{ marginRight: '5px' }} onClick = {() => { navigate('/checkout', { state: { pickup: false } }); closeCart(); }} className='primary-button' >Checkout</MDBBtn>
           </MDBCol>
         </MDBRow>
       </MDBContainer>

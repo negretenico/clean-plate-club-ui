@@ -22,7 +22,7 @@ function WhoAreWe (): JSX.Element {
           <MDBCol md = '3'>
             <div style={{ transform: 'translate(0%, 20%)' }}>
               <h2 style={{ color: ORANGE }}>Our story</h2>
-              <h4 style={{ color: '#FFFFFF' }}>We aim to provide To proivde high quality meals and tailored programming to individuals looking to make the most out of their exercise routines and establish healthier eating habits resulting in a lifestyle change.</h4>
+              <h4 style={{ color: '#FFFFFF' }}>We aim to provide high quality meals and tailored programming to individuals looking to make the most out of their exercise routines and establish healthier eating habits resulting in a lifestyle change.</h4>
             </div>
           </MDBCol>
         </MDBRow>
@@ -63,6 +63,22 @@ function WhoAreWe (): JSX.Element {
             </div>
           </MDBCol>
         </MDBRow>
+        <MDBRow>
+          <MDBCol>
+            <div style={{ transform: 'translate(0%,20%)' }}>
+              <h2>Community</h2>
+              <Stack>
+                <p>{
+                  "The Clean Plate Club is a community-minded organization that is dedicated to promoting healthy eating habits and reducing food waste. As part of its commitment to the community, the Clean Plate Club actively seeks out opportunities to get involved in local events and sponsor community programs. One example of this is the organization's sponsorship of a local football team. By supporting the team, the Clean Plate Club is able to encourage physical activity and promote teamwork among local youth. This type of involvement is just one way that the Clean Plate Club strives to make a positive impact in the community and create a healthier, more sustainable future for all.                  "
+                }
+                </p>
+              </Stack>
+            </div>
+          </MDBCol>
+          <MDBCol>
+            <img style={{ borderRadius: '.5rem' }} src='/who/community.jpg' alt="community" height = '420px' width='420px'/>
+          </MDBCol>
+        </MDBRow>
         {/* <MDBRow center>
           <h3>
             Getting a plan of action established to master daily habits. With that, we will address and manage Resistance training, conditioning, improvement of metabolic function, stress, and nutritional structure. Ceating consistency in these areas will not only improve teh likelihood of sucess, but also encourage a healthier way of lie.
@@ -88,7 +104,11 @@ function WhoAreWe (): JSX.Element {
                 CEO & Founder
                 </MDBCardSubTitle>
                 <MDBCardText>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra orci sagittis eu volutpat odio facilisis mauris. Elementum facilisis leo vel fringilla est. Diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet. Cras adipiscing enim eu turpis egestas pretium aenean.
+                Meet Brian Davis, owner of The Clean Plate Club. With a lifelong passion for health and
+wellness, Brian founded this innovative venture to make healthy eating easy. Offering
+convenient and delicious options, The Clean Plate Club is your go-to resource for nutritious
+
+meals on the go. Join us and experience a new level of well-being.
                 </MDBCardText>
               </MDBCardBody>
             </MDBCard>

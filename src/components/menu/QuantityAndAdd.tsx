@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MDBBtn, MDBCol, MDBRow } from 'mdb-react-ui-kit';
+import { MDBBtn, MDBCol, MDBIcon, MDBRow, MDBTooltip } from 'mdb-react-ui-kit';
+import { useNavigate } from 'react-router-dom';
 interface Props {
   count: number
   handleIncreaseClick: () => void
@@ -15,6 +16,7 @@ function QuantityAndAdd ({ count, handleIncreaseClick, handleDecreaseClick, hand
     border: 'none', // Remove the border
     color: 'black'
   };
+  const navigate = useNavigate();
   return (
     <MDBRow>
       <MDBCol md='8'>
@@ -33,7 +35,12 @@ function QuantityAndAdd ({ count, handleIncreaseClick, handleDecreaseClick, hand
         </MDBRow>
       </MDBCol>
       <MDBCol size='6' md='4'>
-        <MDBBtn className='primary-button' onClick={handleClick}>Add to Cart</MDBBtn>
+        <MDBBtn className='primary-button' onClick={handleClick}>
+          Add to Cart
+          <MDBTooltip tag='a' title="Your purchase invests $1 in the health of your neighbors. Find out how">
+            <MDBIcon onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); navigate('/'); }} color='white' className='ms-2' icon="question-circle" size='sm'/>
+          </MDBTooltip>
+        </MDBBtn>
       </MDBCol>
     </MDBRow>
   );

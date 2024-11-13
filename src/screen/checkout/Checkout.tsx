@@ -1,133 +1,83 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type Meal from '../../types/MenuItem';
 import './Checkout.css';
-import { Button, Stack } from 'react-bootstrap';
-import { MDBBtn, MDBCol, MDBContainer, MDBRow, MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
+import { Button, Form, Stack } from 'react-bootstrap';
+import { MDBBtn, MDBCard, MDBCardBody, MDBCol, MDBContainer, MDBRow, MDBSpinner, MDBTable, MDBTableBody, MDBTableHead } from 'mdb-react-ui-kit';
 import { PINK } from '../../colors';
 import CartItem from '../../components/shared/CartItem';
 import formatCurrency from '../../formatCurrency';
 import { useShoppingCart } from '../../hooks/shoppingContext';
+import CreditCardComponent from '../../components/CreditCardComponent';
+import CheckoutHeader from '../../components/CheckoutHeader';
+import PriceSummary from '../../components/PriceSummary';
+import { useLoginContext } from '../../hooks/loginContext';
+import PriceChangeComponent from '../../components/PriceChangeComponent';
+import axios from 'axios';
 function Checkout (): JSX.Element {
-  const location: { state: { cartItems: Meal[], address: string } } = useLocation();
-  const { cartItems } = useShoppingCart();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const pickupAddresses = ['3400 Kohr Blvd, Columbus, OH 43224', '3825 Hard Rd, Dublin, OH 43016'];
+  const [donationAmountOption, setDonationAmount] = useState<number>(0);
+  const [index, setIndex] = useState<number>(0);
+  const [address, setAddress] = useState <string>('3400 Kohr Blvd, Columbus, OH 43224');
+  const { user } = useLoginContext();
   const navigate = useNavigate();
+  const { cartItems, getItemQuantity } = useShoppingCart();
+  const cartMap = new Map(cartItems.map((item) => [item.meal_id, item]));
+  const cartTotal: number = [...cartMap.values()].reduce((total: number, cartItem: Meal) => {
+    return total + cartItem.cost * getItemQuantity(cartItem.meal_id);
+  }, 0);
+  const [elements, setElements] = useState<unknown | null >(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const handleToggle = (): void => {
     setIsOpen(!isOpen);
   };
   const textForNumberOfItems = (): string => {
     return `${cartItems.length} item${cartItems.length > 1 ? 's' : ''}`;
   };
-  const { getItemQuantity } = useShoppingCart();
-  const cartMap = new Map(cartItems.map((item) => [item.meal_id, item]));
-  const cartTotal: number = [...cartMap.values()].reduce((total: number, cartItem: Meal) => {
-    return total + cartItem.cost * getItemQuantity(cartItem.meal_id);
-  }, 0);
-  const discount = -5;
+  const [trainers, setTrainers] = useState<string[]>([]);
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/trainers').then((res) => {
+      setTrainers(res.data);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }, []);
+  const [discount, setDiscount] = useState<number>(0);
   return (
     <div style={{ textAlign: 'center' }}>
-      <h1 className='text-center'>
-        <div className="pop-over-container">
-        Checkout {'('}
-          <span className="a-color-link clickable-headingpop-over-trigger" onClick={handleToggle}>
-            { textForNumberOfItems()}
-          </span>
-          {')'}
-          {isOpen && (
-            <div className="pop-over-content">
-              <div className="pop-over-arrow"></div>
-              <MDBBtn style={{ color: 'black', background: ' #e6e6e6', border: 'none' }} onClick={() => { navigate('/menu'); }}>Continue shopping?</MDBBtn>
-              <MDBBtn className='primary-button' onClick={handleToggle}>Stay in checkout</MDBBtn>
-            </div>
-          )}
-        </div>
-
-      </h1>
       <MDBContainer>
+        <CheckoutHeader navigate={navigate} isOpen={isOpen} handleToggle={handleToggle} textForNumberOfItems={textForNumberOfItems} />
         <MDBRow>
-          <MDBCol md='8'>
-            <MDBRow>
-              <MDBCol md='1'>
-                <h3 className='checkout-header'>1</h3>
-              </MDBCol>
-              <MDBCol md='1'>
-                <h3 className='checkout-header'>Shipping address</h3>
-              </MDBCol>
-              <MDBCol md='2'>
-                {location.state.address} addres
-              </MDBCol>
-            </MDBRow>
-            <hr/>
-            <MDBRow>
-              <MDBCol md='1'>
-                <h3 className='checkout-header'>2</h3>
-              </MDBCol>
-              <MDBCol md='1'>
-                <h3 className='checkout-header'>Payment method</h3>
-              </MDBCol>
-            </MDBRow>
-            <hr/>
-            <MDBRow>
-              <MDBCol md='1'>
-                <h3 className='checkout-header'>3</h3>
-              </MDBCol>
-              <MDBCol >
-                <MDBRow style={{ textAlign: 'left' }}>
-                  <h3 className='checkout-header'>Review Items</h3>
-                </MDBRow>
-                <MDBRow >
-                  <MDBCol md='2'>
-                    <Stack className="col-md-5 mx-auto" gap={3}>
-                      {[...cartMap.values()].map(item => (
-                        <CartItem key={item.meal_id} meal={item} quantity={getItemQuantity(item.meal_id)} />
-                      ))}
-                      <div className="ms-auto fw-bold fs-5">
-            Total{' '}
-                        {formatCurrency(cartTotal)}
-                      </div>
+          <MDBCol>
+            <MDBContainer className="py-5" style={{ maxWidth: '1100px' }}>
+              <MDBRow className="justify-content-center align-items-center">
+                <MDBCard style={{ margin: '1rem' }}>
+                  <MDBCardBody>
+                    <Stack direction="horizontal" gap={3} >
+                      <label>Checkout</label>
+                      <select className="form-select" onChange={(e) => { setAddress(String(e.target?.value)); }}>
+                        {pickupAddresses.map(address => {
+                          return (
+                            <option key ={address}>
+                              {address}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </Stack>
-                  </MDBCol>
-                </MDBRow>
-              </MDBCol>
-            </MDBRow>
+                  </MDBCardBody>
+                </MDBCard>
+                <PriceChangeComponent setDonationAmount={setDonationAmount} />
+              </MDBRow>
+            </MDBContainer>
           </MDBCol>
-          <MDBCol md='4'>
-            <div className ='box'>
-              <div className="box-inner">
-                <MDBBtn className='primary-button'> Place your order </MDBBtn>
-                <hr/>
-                <h3 style={{ textAlign: 'left' }} className='checkout-header'>Order summary</h3>
-                <MDBTable borderless>
-                  <MDBTableBody>
-                    <tr>
-                      <td >Items:</td>
-                      <td >{formatCurrency(cartTotal)}</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1.5px solid' }}>
-                      <td className='text-left'>Discount:</td>
-                      <td >{formatCurrency(discount)}</td>
-                    </tr>
-                    <tr >
-                      <td className='text-left' >
-                        <h3 style={{ color: '#B12704' }} className='checkout-header'>
-                        Order Total
-                        </h3>
-                      </td>
-                      <td >
-                        <h3 style={{ color: '#B12704' }} className='checkout-header'>
-                          {formatCurrency(cartTotal - discount)}
-                        </h3></td>
-                    </tr>
-                  </MDBTableBody>
-                </MDBTable>
-              </div>
-            </div>
+          <MDBCol>
+            {user.email.length === 0 ? <MDBSpinner/> : <CreditCardComponent address={address} user={user} discount={discount} donationAmount={donationAmountOption} cartTotal={cartTotal} setElements={setElements} setIndex={setIndex}/>
+            }
+            <PriceSummary donationAmountOption={donationAmountOption} cartTotal={cartTotal} trainers={trainers} setDiscount={setDiscount} discount={discount} />
           </MDBCol>
         </MDBRow>
-
       </MDBContainer>
-
     </div>
   );
 }

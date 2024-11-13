@@ -1,4 +1,3 @@
-import logo from './../../logo.png';
 import {
   MDBContainer,
   MDBCard,
@@ -119,7 +118,7 @@ function RegistrationScreen (): JSX.Element {
             </MDBCol>
 
             <MDBCol md='10' lg='4' className='order-1 order-lg-2 d-flex align-items-center'>
-              <MDBCardImage src={logo} fluid/>
+              <MDBCardImage src={'logo.png'} fluid/>
             </MDBCol>
           </MDBRow>
         </MDBCardBody>

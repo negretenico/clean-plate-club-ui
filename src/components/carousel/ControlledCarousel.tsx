@@ -1,38 +1,40 @@
 import './ControlledCarousel.css';
 import React, { useState, useRef } from 'react';
-import { TESTIMONIALS } from './testimonials';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCoverflow } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/effect-coverflow';
 
 function ControlledCarousel (): JSX.Element {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const handlePrev = (): void => {
-    setCurrentIndex(currentIndex === 0 ? TESTIMONIALS.length - 1 : currentIndex - 1);
-  };
-
-  const handleNext = (): void => {
-    setCurrentIndex(currentIndex === TESTIMONIALS.length - 1 ? 0 : currentIndex + 1);
-  };
-
+  const images = ['testimonials/image1.jpg', 'testimonials/image2.jpg', 'testimonials/image3.jpg', 'testimonials/image4.jpg'];
   return (
-    <div className="image-slider">
-      <div className="slider-container">
-        <div className='slider-prev' onClick={handlePrev}>
-          <img className="testimonial-image" src={TESTIMONIALS[currentIndex === 0 ? TESTIMONIALS.length - 1 : currentIndex - 1].image} alt="" />
-        </div>
-        <div className='slider-current'>
-          <img className="testimonial-image " src={TESTIMONIALS[currentIndex].image} alt="" />
-          <div>
-            <h4>{TESTIMONIALS[currentIndex].achieved}</h4>
-            <p>{TESTIMONIALS[currentIndex].quote}</p>
-          </div>
-        </div>
-        <div className='slider-next' onClick={handleNext}>
-          <img className="testimonial-image" src={TESTIMONIALS[currentIndex === TESTIMONIALS.length - 1 ? 0 : currentIndex + 1].image} alt="" />
-        </div>
+    <Swiper
+      grabCursor
+      centeredSlides
+      slidesPerView="auto"
+      effect="coverflow"
+      loop
+      coverflowEffect={{
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: true
+      }}
+      modules={[EffectCoverflow]}
+    >
+      <div className="swiper-wrapper">
+        {images.map((image) => (
+          <SwiperSlide
+            key={image}
+            style={{
+              backgroundImage: `url(${image})`
+            }}
+          />
+        ))}
       </div>
-    </div>
+      <div className="swiper-pagination"></div>
+    </Swiper>
   );
 }
 

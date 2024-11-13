@@ -1,0 +1,38 @@
+.contact-us::after{
+    content: '';
+    width: 10rem;
+    height: .25rem;
+    background-color: #F28410;
+    display: block;
+    margin: 10px auto 0;
+}
+
+.contact-item-title{
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.contact-item{
+    font-weight: 100;
+    font-size: 18px;
+}
+
+.contact-icon{
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: #F28410;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    transform: translateX(17rem);
+}
+.nav-link.active{
+    color: black !important ;
+}
+p{
+    line-height: 1.6em;
+}

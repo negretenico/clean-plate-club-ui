@@ -2,11 +2,9 @@ export const surveyJSON = {
   completedHtml: '<h3>Thank you for your feedback</h3>',
   completedHtmlOnCondition: [
     {
-      expression: '{nps_score} >= 9',
       html: '<h3>Thank you for your feedback</h3> <h4>We are glad that you love our product. Your ideas and suggestions will help us make it even better.</h4>'
     },
     {
-      expression: '{nps_score} >= 6  and {nps_score} <= 8',
       html: '<h3>Thank you for your feedback</h3> <h4>We are glad that you shared your ideas with us. They will help us make our product better.</h4>'
     }
   ],
@@ -64,9 +62,9 @@ export const surveyJSON = {
           name: 'Times do you eat?',
           title: 'How many times do you eat a day? ',
           choices: [
-            '1-2',
-            '2-3',
-            '4+'
+            { value: '1-2', text: '1-2' },
+            { value: '2-3', text: '2-3' },
+            { value: '4+', text: '4+' }
           ]
         }
       ]
@@ -79,9 +77,9 @@ export const surveyJSON = {
           name: 'Times can you eat?',
           title: 'How many times CAN you eat a day?',
           choices: [
-            '1-2',
-            '2-3',
-            '4+'
+            { value: '1-2', text: '1-2' },
+            { value: '2-3', text: '2-3' },
+            { value: '4+', text: '4+' }
           ]
         }
       ]
