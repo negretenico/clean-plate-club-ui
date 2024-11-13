@@ -1,0 +1,17 @@
+.card-front{
+  transition: transform .8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.card-back{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform .8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+.flip-card-outer .card-back {
+  transform: rotateY(180deg);
+}

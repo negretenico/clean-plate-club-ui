@@ -1,0 +1,20 @@
+p{
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+.why-join-icon{
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: #f28410;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    transform: translateX(11rem);
+}
